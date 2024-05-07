@@ -13,7 +13,7 @@ def create_license_plate():
     width, height = 400, 100
     background_color = (255, 203, 9)
     text_color = (0, 0, 0)
-    text_size = 85
+    text_size = 82
     
     # Create the image
     image = Image.new("RGB", (width, height), background_color)
@@ -59,21 +59,19 @@ def perspective_transform(image, corners, alpha):
    
     # Convert alpha to radians
     alpha_rad = math.radians(alpha) 
-
-    # Calculate the distance from the center to the top/bottom edge
-    z = w/2 * math.sin(alpha_rad) 
-
-    # Define the relationship between alpha and theta
-    theta_rad = 0.15 * math.exp(-0.05 * abs(alpha_rad))
  
     # Calculate the horizontal and vertical coordinates of the destination points
     x_left = corners[0][0] + w/2 * (1 - math.cos(alpha_rad)) 
     x_right = corners[0][0] + w/2 * (1 + math.cos(alpha_rad)) 
-    
-    y1 = corners[0][1] + z * math.tan(theta_rad)
-    y2 = corners[0][1] - z * math.tan(theta_rad)
-    y3 = corners[2][1] + z * math.tan(theta_rad)
-    y4 = corners[2][1] - z * math.tan(theta_rad) 
+
+
+    # Calculate the vertical coordinates of the destination points
+    factor = 0.05
+    k = factor * w * alpha_rad
+    y1 = corners[0][1] + k
+    y2 = corners[0][1] - k
+    y3 = corners[2][1] + k
+    y4 = corners[2][1] - k
 
     # Define the destination points
     dest_points = np.float32([
